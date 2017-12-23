@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2002
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wafer.Apis", "Wafer.Apis\Wafer.Apis.csproj", "{66791746-B5FC-4BC2-AB8C-1659AF17171D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{66791746-B5FC-4BC2-AB8C-1659AF17171D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66791746-B5FC-4BC2-AB8C-1659AF17171D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66791746-B5FC-4BC2-AB8C-1659AF17171D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66791746-B5FC-4BC2-AB8C-1659AF17171D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0468470A-A33B-42CB-B29C-FB1845F6D60D}
+	EndGlobalSection
+EndGlobal
