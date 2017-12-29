@@ -19,7 +19,9 @@ namespace Wafer.Apis.Middlewares
         {
             // TODO: How to implement pages limit?
 
-            if (context.Request.Path.Value.ToLower().Contains("account/login"))
+            if (context.Request.Path.Value.ToLower().Contains("account/login")
+                || context.Request.Path.Value.ToLower().Contains("swagger")
+                || context.Request.Path.Value.ToLower().Contains("/favicon.ico"))
             {
                 await _next.Invoke(context);
                 return;

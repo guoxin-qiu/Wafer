@@ -2,3 +2,5 @@
 /Wafer.Apis/bin/Debug/netcoreapp2.0
 /Wafer.Apis/obj
 *.user
+/Wafer.Apis/bin/Release
+/Wafer.Apis/Properties/PublishProfiles

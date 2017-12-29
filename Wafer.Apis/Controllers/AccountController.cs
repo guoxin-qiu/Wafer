@@ -3,10 +3,9 @@ using Wafer.Apis.Models;
 using System.Linq;
 using Wafer.Apis.Dtos.Account;
 using Wafer.Apis.Utils;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Caching.Memory;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Wafer.Apis.Controllers
 {
@@ -24,6 +23,7 @@ namespace Wafer.Apis.Controllers
 
         [HttpGet]
         [Route("login")]
+        [AllowAnonymous]
         public LoginInfoDto Login(string username, string password, bool rememberme)
         {
             var user = _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
@@ -33,7 +33,7 @@ namespace Wafer.Apis.Controllers
             }
 
             var token = Generator.GetToken(username, password);
-            _memoryCache.Set(token, token, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(20)));
+            _memoryCache.Set(token, token, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromDays(5)));
 
             return new LoginInfoDto
             {
