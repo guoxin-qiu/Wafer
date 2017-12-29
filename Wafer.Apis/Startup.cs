@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Wafer.Apis.Middlewares;
 using Wafer.Apis.Models;
+using Wafer.Apis.Utils;
 
 namespace Wafer.Apis
 {
@@ -23,8 +25,18 @@ namespace Wafer.Apis
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins(Configuration["Settings:Origins"]?.Split(";")).AllowAnyMethod());
+                    builder => builder.WithOrigins(Configuration["Settings:Origins"]?.Split(";"))
+                    .AllowCredentials().AllowAnyMethod().AllowAnyHeader());
             });
+
+            services.AddAuthentication(StaticString.ApiCookieAuthenticationSchema)
+                .AddCookie(StaticString.ApiCookieAuthenticationSchema, options => {
+                    options.AccessDeniedPath = "/Account/Forbidden";
+                    options.LoginPath = "/Account/Unauthorized";
+                    options.Cookie.HttpOnly = true;
+                    options.ExpireTimeSpan = System.TimeSpan.FromDays(1);
+                });
+
             services.AddMvc();
         }
 
@@ -36,6 +48,10 @@ namespace Wafer.Apis
             }
 
             app.UseCors("AllowSpecificOrigin");
+
+            // Call UseAuthentication before calling UseMVCWithDefaultRoute or UseMVC.
+            app.UseAuthentication();
+
             app.UseMvc();
 
             WaferContextInitializer.Init(waferContext);

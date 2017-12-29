@@ -61,9 +61,9 @@ namespace Wafer.Apis.Utils
             return EncryptMD5("admin");
         }
 
-        public static string GetToken()
+        public static string GetToken(string username)
         {
-            return Guid.NewGuid().ToString();
+            return EncryptMD5(username);
         }
     }
 }

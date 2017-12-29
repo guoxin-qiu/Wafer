@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wafer.Apis", "Wafer.Apis\Wafer.Apis.csproj", "{66791746-B5FC-4BC2-AB8C-1659AF17171D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wafer.Apis", "Wafer.Apis\Wafer.Apis.csproj", "{66791746-B5FC-4BC2-AB8C-1659AF17171D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{98FCD6A0-3216-491C-8070-0927C8158AF6}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
