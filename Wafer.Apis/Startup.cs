@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Wafer.Apis.Middlewares;
 using Wafer.Apis.Models;
-using Wafer.Apis.Utils;
 
 namespace Wafer.Apis
 {
@@ -29,13 +28,7 @@ namespace Wafer.Apis
                     .AllowCredentials().AllowAnyMethod().AllowAnyHeader());
             });
 
-            services.AddAuthentication(StaticString.ApiCookieAuthenticationSchema)
-                .AddCookie(StaticString.ApiCookieAuthenticationSchema, options => {
-                    options.AccessDeniedPath = "/Account/Forbidden";
-                    options.LoginPath = "/Account/Unauthorized";
-                    options.Cookie.HttpOnly = true;
-                    options.ExpireTimeSpan = System.TimeSpan.FromDays(1);
-                });
+            services.AddMemoryCache();
 
             services.AddMvc();
         }
@@ -49,8 +42,7 @@ namespace Wafer.Apis
 
             app.UseCors("AllowSpecificOrigin");
 
-            // Call UseAuthentication before calling UseMVCWithDefaultRoute or UseMVC.
-            app.UseAuthentication();
+            app.UseBasicAuthenticationMiddleware();
 
             app.UseMvc();
 

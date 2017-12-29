@@ -3,11 +3,10 @@ using Wafer.Apis.Models;
 using System.Linq;
 using Wafer.Apis.Dtos.Account;
 using Wafer.Apis.Utils;
-using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
-using System.Collections.Generic;
+using Microsoft.Extensions.Caching.Memory;
+using System;
 
 namespace Wafer.Apis.Controllers
 {
@@ -15,42 +14,31 @@ namespace Wafer.Apis.Controllers
     public class AccountController : Controller
     {
         private readonly WaferContext _context;
-        public AccountController(WaferContext context)
+        private readonly IMemoryCache _memoryCache;
+
+        public AccountController(WaferContext context, IMemoryCache memoryCache)
         {
             _context = context;
+            _memoryCache = memoryCache;
         }
 
         [HttpGet]
         [Route("login")]
-        public async Task<LoginInfoDto> Login(string username, string password, bool rememberme)
+        public LoginInfoDto Login(string username, string password, bool rememberme)
         {
             var user = _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
             if(user.IsNull())
             {
                 return new LoginInfoDto { LoginSuccess = false };
             }
-            
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Username.ToLower()),
-                new Claim(ClaimTypes.Email, user.Email.ToLower())
-            };
 
-            var claimsIdentity = new ClaimsIdentity(
-                claims,
-                StaticString.ApiCookieAuthenticationSchema);
-
-            await HttpContext.SignInAsync(
-                StaticString.ApiCookieAuthenticationSchema,
-                new ClaimsPrincipal(claimsIdentity),
-                new AuthenticationProperties {
-                    IsPersistent = rememberme
-                });
+            var token = Generator.GetToken(username, password);
+            _memoryCache.Set(token, token, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(20)));
 
             return new LoginInfoDto
             {
                 LoginSuccess = true,
-                Token = Generator.GetToken(username),
+                Token = token,
                 UserInfo = new LoginUserInfoDto
                 {
                     Username = user.Username,
@@ -60,15 +48,14 @@ namespace Wafer.Apis.Controllers
             };
         }
 
-        public async Task<IActionResult> Logout()
+        [HttpGet]
+        [Route("logout")]
+        public void Logout()
         {
-            await HttpContext.SignOutAsync(StaticString.ApiCookieAuthenticationSchema);
-
-            return Ok();
+            _memoryCache.Remove(HttpContext.Request.Headers["Authorization"]);
         }
 
         [HttpGet]
-        [Authorize]
         [Route("menu")]
         public IActionResult Get()
         {
